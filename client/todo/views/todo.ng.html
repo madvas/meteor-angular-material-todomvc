@@ -1,0 +1,71 @@
+<div flex flex-gt-md="80" flex-gt-lg="40" class="md-whiteframe-z1">
+    <md-toolbar class="md-accent">
+        <h1 class="md-toolbar-tools">Todos</h1>
+    </md-toolbar>
+
+    <md-content>
+        <md-content class="md-padding pad-ver-0">
+            <form ng-submit="addTodo()">
+                <md-input-container>
+                    <label>What needs to be done?</label>
+                    <input ng-model="newTodo" autofocus>
+                </md-input-container>
+            </form>
+        </md-content>
+        <md-list>
+            <md-item ng-repeat="todo in todos | todoFilter"
+                     ng-class="{completed: todo.completed, editing: todo._id == editedTodo._id}">
+
+                <md-divider ng-if="$first"></md-divider>
+                <md-item-content class="md-tile-content" layout="row" layout-align="space-between">
+                    <div class="view">
+                        <md-checkbox ng-model="todo.completed" aria-label="{{todo.completed}} Checked">
+                            <span class="title">{{todo.title}}</span>
+                        </md-checkbox>
+                    </div>
+                    <form flex ng-submit="doneEditing(todo)">
+                        <md-input-container class="pad-bot-0">
+                            <input ng-model="todo.title"
+                                   todo-blur="doneEditing(todo)"
+                                   todo-focus="todo == editedTodo"
+                                   todo-escape="revertEditing(todo)">
+
+                        </md-input-container>
+                    </form>
+                    <div class="item-btns">
+                        <md-button aria-label="Edit task" class="md-primary" ng-click="editTodo(todo)">
+                            <md-icon md-svg-src="pencil-box-outline.svg">
+                            </md-icon>
+                        </md-button>
+                        <md-button aria-label="Remove task" class="md-warn" ng-click="removeTodo(todo)">
+                            <md-icon md-svg-src="/close-box-outline.svg">
+                            </md-icon>
+                        </md-button>
+                    </div>
+                </md-item-content>
+                <md-divider></md-divider>
+            </md-item>
+        </md-list>
+
+        <md-content layout="row" class="list-bottom md-padding">
+            <div flex="60" layout="row" layout-align="space-between center">
+                <span><strong>{{remainingCount}}</strong>
+					<ng-pluralize count="remainingCount"
+                                  when="{ one: ' item left', other: ' items left' }"></ng-pluralize>
+				</span>
+
+                <div flex="45" layout="row" layout-align="space-between">
+                    <a ng-class="{selected: location.hash() === 'all'}" href="#all">All</a>
+                    <a ng-class="{selected: location.hash() === 'active'}" href="#active">Active</a>
+                    <a ng-class="{selected: location.hash() === 'completed'}" href="#completed">Completed</a>
+                </div>
+            </div>
+            <div flex layout="row" layout-align="end center">
+                <md-button class="md-primary" ng-click="clearCompletedTodos()" ng-show="completedCount">
+                    Clear Completed ({{completedCount}})
+                </md-button>
+            </div>
+        </md-content>
+
+    </md-content>
+</div>
